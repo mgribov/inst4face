@@ -17,6 +17,7 @@ class Version20130709222802 extends AbstractMigration {
                 email varchar(255) not null, 
                 password char(32) not null, 
                 salt varchar(255) not null,
+                pics int not null default 0,
                 facebook_id bigint
             )
         ");
@@ -26,14 +27,48 @@ class Version20130709222802 extends AbstractMigration {
                 id bigint not null default nextval('pic_id_seq') primary key,
                 login_id int not null,
                 name varchar(255) not null,
-                url text not null
+                url text not null,
+                likes int not null default 0
             )
         ");
+
+        $this->addSql("
+            CREATE OR REPLACE FUNCTION pic_count() RETURNS TRIGGER AS $$
+            BEGIN
+                IF TG_OP = 'INSERT' THEN
+
+                    UPDATE login SET pics = pics + 1 WHERE id = NEW.login_id;
+                    RETURN NEW;
+
+                ELSIF TG_OP = 'DELETE' THEN
+
+                    UPDATE login SET pics = pics - 1 WHERE id = NEW.login_id;
+                    RETURN NULL;
+
+                END IF;
+            END;
+            $$ language 'plpgsql';        
+        ");
+        $this->addSql('CREATE TRIGGER counter AFTER INSERT OR DELETE ON pic FOR EACH ROW EXECUTE PROCEDURE pic_count()');
+
+        $this->addSql("
+            CREATE OR REPLACE FUNCTION notify_pic_like() RETURNS TRIGGER AS $$
+            DECLARE
+                t_msg TEXT;    
+            BEGIN
+                t_msg := row_to_json(f) from (select email, name from login where id=NEW.login_id) f;
+                PERFORM pg_notify('pic_like', t_msg);
+                RETURN NEW;
+            END;
+            $$ language 'plpgsql';        
+        ");
+        $this->addSql('CREATE TRIGGER likes AFTER UPDATE ON pic FOR EACH ROW WHEN (NEW.likes > OLD.likes) EXECUTE PROCEDURE notify_pic_like()');
+
 
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("drop table login");   
+        // SQL to undo everything in up()
     }
 }
