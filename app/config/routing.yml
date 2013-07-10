@@ -1,0 +1,4 @@
+i_app:
+    resource: "@iAppBundle/Resources/config/routing.yml"
+    prefix:   /
+
