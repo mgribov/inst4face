@@ -1,15 +1,36 @@
 imports:
     - { resource: config.yml }
 
-#framework:
-#    validation:
-#        cache: apc
+framework:
+    validation:
+        cache: apc
 
-#doctrine:
-#    orm:
-#        metadata_cache_driver: apc
-#        result_cache_driver: apc
-#        query_cache_driver: apc
+# memcache sessions
+services:
+    session.memcache:
+        class: Memcache
+        calls:
+          - [ addServer, [ 'sess1.memcache.inst4face.com', 11211 ]]
+          - [ addServer, [ 'sess2.memcache.inst4face.com', 11211 ]]
+
+    session.handler.memcache:
+        class: Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcacheSessionHandler
+        arguments: [ @session.memcache, { prefix: 'SESS', expiretime: 36000 } ]
+
+# dont crash on missing twig vars
+twig:
+    strict_variables: false
+
+# cache all things ORM 
+doctrine:
+    orm:
+        metadata_cache_driver: apc
+        result_cache_driver: apc
+        result_cache_driver:
+            type: memcache
+            host: db.memcache.inst4face.com 
+            port: 11211
+            instance_class: Memcache
 
 monolog:
     handlers:
