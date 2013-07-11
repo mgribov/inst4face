@@ -25,4 +25,8 @@ i\AppBundle\Entity\Pic:
             type: integer
             unsigned: false
             nullable: false
+        createdAt:
+            type: datetime
+            nullable: false
+            column: created_at
     lifecycleCallbacks: {  }
