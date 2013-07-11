@@ -22,8 +22,8 @@
 	    "doctrine/doctrine-migrations-bundle": "dev-master",
         "kriswallsmith/assetic": "1.1.0",
         "facebook/php-sdk": "dev-master",
-        "amazonwebservices/aws-sdk-for-php": "*"
-
+        "amazonwebservices/aws-sdk-for-php": "*",
+        "jms/security-extra-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [
