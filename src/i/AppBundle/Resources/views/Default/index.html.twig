@@ -3,5 +3,32 @@
 {% block title %}inst4face home{% endblock %}
 
 {% block body %}
+<div class="container">
 
+    {% if images is defined and images is iterable %}
+        {% set j = 1 %}
+    
+        {% for i in images %}
+
+            {% if j == 1 %}
+                <div class="row">
+            {% endif %}
+                    
+            <div class="span3">
+                <h2>{{i.name}}</h2>
+                <p><img src="{{i.url}}"></p>
+                <p><a class="btn" href="{{path('like', {'id' : i.id})}}">Like &raquo;</a></p>
+            </div>
+                
+            {% if j == 4 %} 
+                {% set j = 1 %}
+                </div>
+            {% else %}
+                {% set j = j + 1 %}
+            {% endif %}
+    
+        {% endfor %}
+    {% endif %}
+    
+</div> <!-- /container -->
 {% endblock %}
