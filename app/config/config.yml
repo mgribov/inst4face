@@ -62,8 +62,10 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
-    username:  %mailer_user%
-    password:  %mailer_password%
-    spool:     { type: memory }
+    transport: smtp
+    port:      25
+    host:      127.0.0.1
+    spool:
+        type: file
+        path: /tmp/swiftmailer_spool
+

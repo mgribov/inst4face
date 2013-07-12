@@ -51,20 +51,6 @@ class Version20130709222802 extends AbstractMigration {
         ");
         $this->addSql('CREATE TRIGGER counter AFTER INSERT OR DELETE ON pic FOR EACH ROW EXECUTE PROCEDURE pic_count()');
 
-        $this->addSql("
-            CREATE OR REPLACE FUNCTION notify_pic_like() RETURNS TRIGGER AS $$
-            DECLARE
-                t_msg TEXT;    
-            BEGIN
-                t_msg := row_to_json(f) from (select email, name from login where id=NEW.login_id) f;
-                PERFORM pg_notify('pic_like', t_msg);
-                RETURN NEW;
-            END;
-            $$ language 'plpgsql';        
-        ");
-        $this->addSql('CREATE TRIGGER likes AFTER UPDATE ON pic FOR EACH ROW WHEN (NEW.likes > OLD.likes) EXECUTE PROCEDURE notify_pic_like()');
-
-
     }
 
     public function down(Schema $schema)
