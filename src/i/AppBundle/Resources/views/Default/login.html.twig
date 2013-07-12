@@ -4,4 +4,12 @@
 
 {% block body %}
 
+    {% if error is not null %}
+            <div class="span6 offset3">
+                <div>
+                    <h1>{{error.getMessage }}</h1>
+                </div>
+            </div> <!-- end /error-message -->
+    {% endif %}
+
 {% endblock %}

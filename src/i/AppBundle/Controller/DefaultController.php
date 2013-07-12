@@ -5,9 +5,29 @@ namespace i\AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class DefaultController extends Controller {
+    
+    /** 
+     * @Route("/login", name="login")
+     */    
+    public function loginAction() {
+        $out = array();
         
+        $request = $this->getRequest();
+        $session = $this->get('session');
+        
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $out['error'] = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+        } else {
+            $out['error'] = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+        }
+
+        return $this->render('iAppBundle:Default:login.html.twig', $out);
+    }
+    
     /** 
      * @Route("/upload", name="upload")
      * @Secure(roles="ROLE_USER")
