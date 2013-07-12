@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Pic
  *
  * @ORM\Table(name="pic")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="i\AppBundle\Repository\PicRepository")
  */
 class Pic
 {
@@ -21,13 +21,6 @@ class Pic
      * @ORM\SequenceGenerator(sequenceName="pic_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="login_id", type="integer", nullable=false)
-     */
-    private $loginId;
 
     /**
      * @var string
@@ -57,6 +50,15 @@ class Pic
      */
     private $createdAt;
 
+    /**
+     * @var Login
+     *
+     * @ORM\ManyToOne(targetEntity="Login", inversedBy="allPics")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="login_id", referencedColumnName="id")
+     * })
+     */
+    private $login;
 
 
     /**
@@ -70,26 +72,26 @@ class Pic
     }
 
     /**
-     * Set loginId
+     * Set login
      *
-     * @param integer $loginId
+     * @param i\AppBundle\Entity\Login $login
      * @return Pic
      */
-    public function setLoginId($loginId)
+    public function setLogin(i\AppBundle\Entity\Login $login)
     {
-        $this->loginId = $loginId;
+        $this->login = $login;
     
         return $this;
     }
 
     /**
-     * Get loginId
+     * Get login
      *
-     * @return integer 
+     * @return i\AppBundle\Entity\Login 
      */
-    public function getLoginId()
+    public function getLogin()
     {
-        return $this->loginId;
+        return $this->login;
     }
 
     /**

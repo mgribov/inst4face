@@ -72,7 +72,13 @@ class Login implements UserInterface
      */
     private $createdAt;
 
-
+    /**
+     * @var Pic
+     * 
+     * @ORM\OneToMany(targetEntity="Pic", mappedBy="login")
+     */
+    private $allPics;
+    
     public function __construct() {
         $this->pics = 0;
         $this->salt = $this->salt = md5(uniqid(null, true));

@@ -52,9 +52,9 @@
                             {% else %}
                                 
                                 <li>
-                                    <form class="navbar-form pull-right">
-                                        <input class="span2" type="text" placeholder="Email">
-                                        <input class="span2" type="password" placeholder="Password">
+                                    <form action="{{ path('login_check') }}" method="post" class="navbar-form pull-right">
+                                        <input class="span2" type="text" placeholder="Email" name="_username">
+                                        <input class="span2" type="password" placeholder="Password" name="_password">
                                         <button type="submit" class="btn">Sign in</button>
                                     </form>
                                 </li>
