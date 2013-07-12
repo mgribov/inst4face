@@ -3,6 +3,7 @@
 namespace i\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Login
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="login")
  * @ORM\Entity
  */
-class Login
+class Login implements UserInterface
 {
     /**
      * @var integer
@@ -65,6 +66,34 @@ class Login
     private $facebookId;
 
 
+    public function __construct() {
+        $this->pics = 0;
+        $this->salt = $this->salt = md5(uniqid(null, true));
+    }
+
+    public function getUsername() {
+        return $this->email;
+    }
+
+    public function getRoles() {
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials() {
+
+    }
+
+    public function checkPassword($password) {
+        return $this->password == hash('sha512', $password . '{' . $this->salt . '}');
+    }
+
+    public function createPassword($password) {
+        if (!strlen($password)) {
+            throw new \Exception('Password cannot be empty');
+        }
+
+        $this->password = hash('sha512', $password . '{' . $this->salt . '}');
+    }
 
     /**
      * Get id
