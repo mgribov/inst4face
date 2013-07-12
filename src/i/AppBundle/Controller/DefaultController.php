@@ -61,6 +61,7 @@ class DefaultController extends Controller {
                 $cookie = new Cookie(md5($id), true, time() + 60 * 60 * 24 * 365, '/', '.inst4face.com', false, false);      
                 $response->headers->setCookie($cookie);
                 
+                $out = array();
                 $message = \Swift_Message::newInstance()
                         ->setSubject('Someone loves your pic!')
                         ->setFrom('yay@inst4face.com')
