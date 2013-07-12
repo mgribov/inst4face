@@ -1,5 +1,4 @@
-1. Simple command to crawl the database and download pics locally for some reason
-src/i/AppBundle/Command/DownloadPicsCommand.php:
+<?php
 namespace i\AppBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -48,30 +47,3 @@ EOT
         return false;
     }
 }
-
-2. Read the help for command:
-./app/console help i:pics:download
-Usage:
- i:pics:download [-f|--folder[="..."]]
-
-Options:
- --folder (-f)         Folder to download to (default: "/tmp/images")
- --help (-h)           Display this help message.
- --quiet (-q)          Do not output any message.
- --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
- --version (-V)        Display this application version.
- --ansi                Force ANSI output.
- --no-ansi             Disable ANSI output.
- --no-interaction (-n) Do not ask any interactive question.
- --shell (-s)          Launch the shell.
- --process-isolation   Launch commands from shell as a separate process.
- --env (-e)            The Environment name. (default: "dev")
- --no-debug            Switches off debug mode.
-
-Help:
- The i:pics:download command crawls the pic table and dowloads all pictures locally for later processing
-
-
-3. Run the command with or without optional -f param
-./app/console i:pics:download
-
