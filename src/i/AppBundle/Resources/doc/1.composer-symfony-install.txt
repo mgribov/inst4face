@@ -1,0 +1,175 @@
+nyccamp@vader:~/public_html$ php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
+#!/usr/bin/env php
+All settings correct for using Composer
+Downloading...
+
+Composer successfully installed to: /home/nyccamp/public_html/composer.phar
+Use it: php composer.phar
+
+
+
+nyccamp@vader:~/public_html$ php composer.phar create-project symfony/framework-standard-edition inst4face 2.3.1
+Installing symfony/framework-standard-edition (v2.3.1)
+  - Installing symfony/framework-standard-edition (v2.3.1)
+    Loading from cache
+
+Created project in inst4face
+Loading composer repositories with package information
+Installing dependencies (including require-dev)
+  - Installing jdorn/sql-formatter (v1.2.9)
+    Loading from cache
+
+  - Installing doctrine/common (2.3.0)
+    Loading from cache
+
+  - Installing doctrine/dbal (2.3.4)
+    Loading from cache
+
+  - Installing psr/log (1.0.0)
+    Loading from cache
+
+  - Installing twig/twig (v1.13.1)
+    Loading from cache
+
+  - Installing symfony/symfony (v2.3.1)
+    Loading from cache
+
+  - Installing symfony/icu (v1.0.0)
+    Loading from cache
+
+  - Installing doctrine/doctrine-bundle (v1.2.0)
+    Loading from cache
+
+  - Installing twig/extensions (v1.0.0)
+    Loading from cache
+
+  - Installing kriswallsmith/assetic (v1.1.1)
+    Loading from cache
+
+  - Installing symfony/assetic-bundle (v2.3.0)
+    Loading from cache
+
+  - Installing monolog/monolog (1.5.0)
+    Loading from cache
+
+  - Installing symfony/monolog-bundle (v2.3.0)
+    Loading from cache
+
+  - Installing incenteev/composer-parameter-handler (v2.0.0)
+    Loading from cache
+
+  - Installing doctrine/orm (2.3.4)
+    Loading from cache
+
+  - Installing swiftmailer/swiftmailer (v5.0.1)
+    Loading from cache
+
+  - Installing symfony/swiftmailer-bundle (v2.3.1)
+    Loading from cache
+
+  - Installing sensio/distribution-bundle (v2.3.1)
+    Loading from cache
+
+  - Installing sensio/framework-extra-bundle (v2.3.1)
+    Loading from cache
+
+  - Installing sensio/generator-bundle (v2.3.1)
+    Loading from cache
+
+kriswallsmith/assetic suggests installing leafo/lessphp (Assetic provides the integration with the lessphp LESS compiler)
+kriswallsmith/assetic suggests installing leafo/scssphp (Assetic provides the integration with the scssphp SCSS compiler)
+kriswallsmith/assetic suggests installing ptachoire/cssembed (Assetic provides the integration with phpcssembed to embed data uris)
+kriswallsmith/assetic suggests installing leafo/scssphp-compass (Assetic provides the integration with the SCSS compass plugin)
+monolog/monolog suggests installing mlehner/gelf-php (Allow sending log messages to a GrayLog2 server)
+monolog/monolog suggests installing raven/raven (Allow sending log messages to a Sentry server)
+monolog/monolog suggests installing doctrine/couchdb (Allow sending log messages to a CouchDB server)
+monolog/monolog suggests installing ext-amqp (Allow sending log messages to an AMQP server (1.0+ required))
+Writing lock file
+Generating autoload files
+Creating the "app/config/parameters.yml" file.
+Some parameters are missing. Please provide them.
+database_driver (pdo_mysql):pdo_pgsql
+database_host (127.0.0.1):
+database_port (null):
+database_name (symfony):inst4face           
+database_user (root):inst4face
+database_password (null):inst4face
+mailer_transport (smtp):
+mailer_host (127.0.0.1):
+mailer_user (null):
+mailer_password (null):
+locale (en):
+secret (ThisTokenIsNotSoSecretChangeIt):G*^(&SFUIOd078sydasod79s6d(
+Clearing the cache for the dev environment with debug true
+Installing assets using the hard copy option
+Installing assets for Symfony\Bundle\FrameworkBundle into web/bundles/framework
+Installing assets for Acme\DemoBundle into web/bundles/acmedemo
+Installing assets for Sensio\Bundle\DistributionBundle into web/bundles/sensiodistribution
+nyccamp@vader:~/public_html$ ls -ltr
+total 864
+-rwxr-xr-x 1 nyccamp nyccamp 875579 Jul  9 21:49 composer.phar
+drwxrwxr-x 3 nyccamp nyccamp   4096 Jul  9 21:50 vendor
+drwxrwxr-x 7 nyccamp nyccamp   4096 Jul  9 21:50 inst4face
+nyccamp@vader:~/public_html$ cd inst4face/
+nyccamp@vader:~/public_html/inst4face$ php app/check.php 
+********************************
+*                              *
+*  Symfony requirements check  *
+*                              *
+********************************
+
+* Configuration file used by PHP: /etc/php5/cli/php.ini
+
+** ATTENTION **
+*  The PHP CLI can use a different php.ini file
+*  than the one used with your web server.
+*  To be on the safe side, please also launch the requirements check
+*  from your web server using the web/config.php script.
+
+** Mandatory requirements **
+
+ OK       PHP version must be at least 5.3.3 (5.4.6-1ubuntu1.2 installed)
+ OK       PHP version must not be 5.3.16 as Symfony won't work properly with it
+ OK       Vendor libraries must be installed
+ OK       app/cache/ directory must be writable
+ OK       app/logs/ directory must be writable
+ OK       date.timezone setting must be set
+ OK       Configured default timezone "America/New_York" must be supported by your installation of PHP
+ OK       json_encode() must be available
+ OK       session_start() must be available
+ OK       ctype_alpha() must be available
+ OK       token_get_all() must be available
+ OK       simplexml_import_dom() must be available
+ OK       APC version must be at least 3.1.13 when using PHP 5.4
+ OK       detect_unicode must be disabled in php.ini
+ OK       xdebug.show_exception_trace must be disabled in php.ini
+ OK       xdebug.scream must be disabled in php.ini
+ OK       PCRE extension must be available
+
+** Optional recommendations **
+
+ OK       xdebug.max_nesting_level should be above 100 in php.ini
+ OK       Requirements file should be up-to-date
+ OK       You should use at least PHP 5.3.4 due to PHP bug #52083 in earlier versions
+ OK       When using annotations you should have at least PHP 5.3.8 due to PHP bug #55156
+ OK       You should not use PHP 5.4.0 due to the PHP bug #61453
+ OK       PCRE extension should be at least version 8.0 (8.3 installed)
+ OK       PHP-XML module should be installed
+ OK       mb_strlen() should be available
+ OK       iconv() should be available
+ OK       utf8_decode() should be available
+ OK       posix_isatty() should be available
+ WARNING  intl extension should be available
+          Install and enable the intl extension (used for validators).
+
+ OK       a PHP accelerator should be installed
+ WARNING  short_open_tag should be disabled in php.ini
+          Set short_open_tag to off in php.ini*.
+
+ OK       magic_quotes_gpc should be disabled in php.ini
+ OK       register_globals should be disabled in php.ini
+ OK       session.auto_start should be disabled in php.ini
+ OK       PDO should be installed
+ OK       PDO should have some drivers installed (currently available: mysql, pgsql, sqlite)
+nyccamp@vader:~/public_html/inst4face$ 
+

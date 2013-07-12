@@ -1,0 +1,22 @@
+1. Generate YML files describing the database tables:
+./app/console doctrine:mapping:import iAppBundle yml
+Importing mapping information from "default" entity manager
+  > writing /home/nyccamp/public_html/inst4face/src/i/AppBundle/Resources/config/doctrine/MigrationVersions.orm.yml
+  > writing /home/nyccamp/public_html/inst4face/src/i/AppBundle/Resources/config/doctrine/Login.orm.yml
+  > writing /home/nyccamp/public_html/inst4face/src/i/AppBundle/Resources/config/doctrine/Pic.orm.yml
+
+
+2. Convert YML mapping to annotation-based Doctrine entities:
+./app/console doctrine:mapping:convert annotation ./src
+Processing entity "i\AppBundle\Entity\Pic"
+Processing entity "i\AppBundle\Entity\Login"
+Processing entity "i\AppBundle\Entity\MigrationVersions"
+
+
+3. Generate the getters and setters for the entities
+./app/console doctrine:generate:entities --no-backup iAppBundle
+Generating entities for bundle "iAppBundle"
+  > generating i\AppBundle\Entity\Pic
+  > generating i\AppBundle\Entity\Login
+  > generating i\AppBundle\Entity\MigrationVersions
+

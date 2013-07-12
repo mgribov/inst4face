@@ -1,0 +1,139 @@
+
+nyccamp@vader:~/public_html/inst4face$ ./app/console doctrine:migrations:generate
+Generated new migration class to "/home/nyccamp/public_html/inst4face/app/DoctrineMigrations/Version20130709222802.php"
+
++<?php
++
++namespace Application\Migrations;
++
++use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
++
++class Version20130709222802 extends AbstractMigration {
++    public function up(Schema $schema) {
++        $this->addSql("create sequence login_id_seq");
++        $this->addSql("create sequence pic_id_seq");
++
++        $this->addSql("
++            create table login (
++                id bigint not null default nextval('login_id_seq') primary key, 
++                name varchar(255) not null, 
++                email varchar(255) not null, 
++                password char(32) not null, 
++                salt varchar(255) not null,
++                pics int not null default 0,
++                facebook_id bigint
++            )
++        ");
++
++        $this->addSql("
++            CREATE OR REPLACE FUNCTION pic_count() RETURNS TRIGGER AS $$
++            BEGIN
++                IF TG_OP = 'INSERT' THEN
++
++                    UPDATE login SET pics = pics + 1 WHERE id = NEW.login_id;
++                    RETURN NEW;
++
++                ELSIF TG_OP = 'DELETE' THEN
++
++                    UPDATE login SET pics = pics - 1 WHERE id = NEW.login_id;
++                    RETURN NULL;
++
++                END IF;
++            END;
++            $$ language 'plpgsql';        
++        ");
++        $this->addSql('CREATE TRIGGER counter AFTER INSERT OR DELETE ON pic FOR EACH ROW EXECUTE PROCEDURE pic_count()');
++
++        $this->addSql("
++            CREATE OR REPLACE FUNCTION notify_pic_like() RETURNS TRIGGER AS $$
++            DECLARE
++                t_msg TEXT;    
++            BEGIN
++                t_msg := row_to_json(f) FROM (SELECT email, name FROM login WHERE id=NEW.login_id) f;
++                PERFORM pg_notify('pic_like', t_msg);
++                RETURN NEW;
++            END;
++            $$ language 'plpgsql';        
++        ");
++        $this->addSql('CREATE TRIGGER likes AFTER UPDATE ON pic FOR EACH ROW WHEN (NEW.likes > OLD.likes) EXECUTE PROCEDURE notify_pic_like()');
++
++    }
++
++    public function down(Schema $schema)
++    {
++        // SQL to undo everything in up()   
++    }
++}
+
+
+nyccamp@vader:~/public_html/inst4face$ ./app/console doctrine:migrations:migrate
+                                                              
+                    Application Migrations                    
+                                                              
+
+WARNING! You are about to execute a database migration that could result in schema changes and data lost. Are you sure you wish to continue? (y/n)y
+Migrating up to 20130709222802 from 0
+
+  ++ migrating 20130709222802
+
+     -> create sequence login_id_seq
+     -> create sequence pic_id_seq
+     -> 
+            create table login (
+                id bigint not null default nextval('login_id_seq') primary key, 
+                name varchar(255) not null, 
+                email varchar(255) not null, 
+                password char(32) not null, 
+                salt varchar(255) not null,
+                pics int not null default 0,
+                facebook_id bigint
+            )
+        
+     -> 
+            create table pic (
+                id bigint not null default nextval('pic_id_seq') primary key,
+                login_id int not null,
+                name varchar(255) not null,
+                url text not null,
+                likes int not null default 0
+            )
+        
+     -> 
+            CREATE OR REPLACE FUNCTION pic_count() RETURNS TRIGGER AS $$
+            BEGIN
+                IF TG_OP = 'INSERT' THEN
+
+                    UPDATE login SET pics = pics + 1 WHERE id = NEW.login_id;
+                    RETURN NEW;
+
+                ELSIF TG_OP = 'DELETE' THEN
+
+                    UPDATE login SET pics = pics - 1 WHERE id = NEW.login_id;
+                    RETURN NULL;
+
+                END IF;
+            END;
+            $$ language 'plpgsql';        
+        
+     -> CREATE TRIGGER counter AFTER INSERT OR DELETE ON pic FOR EACH ROW EXECUTE PROCEDURE pic_count()
+     -> 
+            CREATE OR REPLACE FUNCTION notify_pic_like() RETURNS TRIGGER AS $$
+            DECLARE
+                t_msg TEXT;    
+            BEGIN
+                t_msg := row_to_json(f) from (select email, name from login where id=NEW.login_id) f;
+                PERFORM pg_notify('pic_like', t_msg);
+                RETURN NEW;
+            END;
+            $$ language 'plpgsql';        
+        
+     -> CREATE TRIGGER likes AFTER UPDATE ON pic FOR EACH ROW WHEN (NEW.likes > OLD.likes) EXECUTE PROCEDURE notify_pic_like()
+
+  ++ migrated (0.28s)
+
+  ------------------------
+
+  ++ finished in 0.28
+  ++ 1 migrations executed
+  ++ 8 sql queries
+

@@ -1,0 +1,8 @@
+1. Create form and action to add a pic URL and record it in the database
+
+2. Post activity to Facebook
+    - add simple Gearman service
+    - add simple Facebook service
+    - add Facebook Post Event
+    - add Facebook Post Event Listener
+    - dispatch the event from Controller on successful pic add

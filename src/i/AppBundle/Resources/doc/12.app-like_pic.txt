@@ -1,0 +1,64 @@
+1. Create a controller action to return JSON, set a cookie and email owner
+src/i/AppBundle/Controller/DefaultController.php:
+
+    /** 
+     * @Route("/pic/{id}/like", name="like")
+     */    
+    public function likeAction($id) {
+        $response = new Response();        
+        $response->headers->set('Content-Type', 'application/json');
+        
+        if (!$this->getRequest()->cookies->get(md5($id))) {
+            $man = $this->getDoctrine()->getManager();            
+            $repo = $man->getRepository('iAppBundle:Pic');
+            
+            $pic = $repo->findOneById($id);            
+            if ($pic instanceof \i\AppBundle\Entity\Pic) {
+                $pic->setLikes($pic->getLikes() + 1);
+                $man->persist($pic);
+                $man->flush();
+                
+                $response->setContent(json_encode(array('msg' => 'success', 'likes' => $pic->getLikes())));
+                $response->setStatusCode(200);
+                
+                $cookie = new Cookie(md5($id), true, time() + 60 * 60 * 24 * 365, '/', '.inst4face.com', false, false);      
+                $response->headers->setCookie($cookie);
+                
+                $message = \Swift_Message::newInstance()
+                        ->setSubject('Someone loves your pic!')
+                        ->setFrom('yay@inst4face.com')
+                        ->setTo($pic->getLogin()->getEmail())
+                        ->setBody($this->renderView('iAppBundle:Default:email_like.html.twig', $out), 'text/html')
+                        ->addPart($this->renderView('iAppBundle:Default:email_like.txt.twig', $out), 'text/plain');
+
+                $this->get('mailer')->send($message);
+                
+            } else {
+                $response->setContent(json_encode(array('msg' => 'no such pic')));
+                $response->setStatusCode(500);                
+            }            
+        } else {
+            $response->setContent(json_encode(array('msg' => 'you already like this')));
+            $response->setStatusCode(500);            
+        }
+        
+        return $response;
+    }
+
+2. Make sure SwiftMailer uses a local spool before trying to deliver over SMTP
+app/config/config.yml:
+ swiftmailer:
+-    transport: %mailer_transport%
+-    host:      %mailer_host%
+-    username:  %mailer_user%
+-    password:  %mailer_password%
+-    spool:     { type: memory }
++    transport: smtp
++    port:      25
++    host:      127.0.0.1
++    spool:
++        type: file
++        path: /tmp/swiftmailer_spool
+
+crontab -l
+*   *   *   *   *   (cd /home/nyccamp/public_html/inst4face && su www-data -c "php app/console swiftmailer:spool:send --env=prod") > /dev/null 2>&1

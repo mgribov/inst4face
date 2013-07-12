@@ -1,0 +1,1 @@
+1. Simple command to crawl the database and download pics locally for some reason

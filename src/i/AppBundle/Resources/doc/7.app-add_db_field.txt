@@ -1,0 +1,24 @@
+NOTE: had to make migrations manually, because doctrine migrator had problems:
+- Step 2 appended the new var and getter/setter to the end of the file
+- Step 2 creates a var without ORM notation?
+- Migrator generates gibberish like:
+$this->addSql("ALTER TABLE pic ALTER id DROP DEFAULT");
+$this->addSql("ALTER TABLE pic ALTER likes SET "); 
+
+1. Add new column definition to the YML mapping file
+src/i/AppBundle/Resources/config/doctrine/Login.orm.yml
++        createdAt:
++            type: datetime
++            nullable: false
++            column: created_at
+
+
+2. Generate the new variable and assoctiated getter/setter in the entity:
+./app/console doctrine:generate:entities iAppBundle:Login --no-backup
+Generating entity "i\AppBundle\Entity\Login"
+  > generating i\AppBundle\Entity\Login
+
+3. Create migration manually and execute it
+./app/console doctine:migrations:generate
+<add ALTER sql>
+./app/console doctrine:migrations:migrate

@@ -1,0 +1,49 @@
+1. Add JMS Security Extras bundle to composer.json so we can require passwords for some of the site:
++        "jms/security-extra-bundle": "*"
+
+2. Modify src/i/AppBundle/Controller/DefaultController.php to add our basic functions and secure one of the routes:
+<?php 
+namespace i\AppBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use JMS\SecurityExtraBundle\Annotation\Secure;
+
+class DefaultController extends Controller {
+    
+    /** 
+     * @Route("/login", name="login")
+     */    
+    public function loginAction() {
+        return $this->render('iAppBundle:Default:login.html.twig');
+    }
+
+    /** 
+     * @Route("/upload", name="upload")
+     * @Secure(roles="ROLE_USER")
+     */    
+    public function uploadAction() {
+        return $this->render('iAppBundle:Default:upload.html.twig');
+    }
+
+    /** 
+     * @Route("/pic/{id}/like", name="like")
+     */    
+    public function likeAction($id) {
+        // ??? 
+    }
+
+    /** 
+     * @Route("/{page}", name="index", defaults={"page" = 1}, requirements={"page" = "\d+"})
+     */                
+    public function indexAction($page = 1) {
+        return $this->render('iAppBundle:Default:index.html.twig');
+    }
+}
+
+3. Modify src/i/AppBundle/Resources/config/routing.yml to register the Default Controller
+i_app_default:
+    resource: "@iAppBundle/Controller/DefaultController.php"
+    type:     annotation    
+
+4. Don't forget to add the actual templates!

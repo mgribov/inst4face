@@ -1,0 +1,79 @@
+nyccamp@vader:~/public_html/inst4face$ git diff
+diff --git a/app/AppKernel.php b/app/AppKernel.php
+index c2847e0..657ee16 100644
+--- a/app/AppKernel.php
++++ b/app/AppKernel.php
+@@ -17,6 +17,7 @@ class AppKernel extends Kernel
+             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+             new i\AppBundle\iAppBundle(),
++            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+         );
+ 
+         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+diff --git a/composer.json b/composer.json
+index 5705d76..7679c67 100644
+--- a/composer.json
++++ b/composer.json
+@@ -18,7 +18,8 @@
+         "sensio/distribution-bundle": "2.3.*",
+         "sensio/framework-extra-bundle": "2.3.*",
+         "sensio/generator-bundle": "2.3.*",
+-        "incenteev/composer-parameter-handler": "~2.0"
++        "incenteev/composer-parameter-handler": "~2.0",
++        "doctrine/doctrine-migrations-bundle": "dev-master"
++        "kriswallsmith/assetic": "1.1.0",
++        "facebook/php-sdk": "dev-master",
++        "amazonwebservices/aws-sdk-for-php": "*"
+     },
+     "scripts": {
+         "post-install-cmd": [
+@@ -39,7 +40,7 @@
+     "config": {
+         "bin-dir": "bin"
+     },
+-    "minimum-stability": "stable",
++    "minimum-stability": "alpha",
+     "extra": {
+         "symfony-app-dir": "app",
+         "symfony-web-dir": "web",
+
+
+nyccamp@vader:~/public_html/inst4face$ php ../composer.phar update
+Loading composer repositories with package information
+Updating dependencies (including require-dev)
+  - Installing doctrine/lexer (v1.0)
+    Downloading: 100%         
+
+  - Installing doctrine/annotations (v1.1.2)
+    Downloading: 100%         
+
+  - Installing doctrine/collections (v1.1)
+    Downloading: 100%         
+
+  - Installing doctrine/cache (v1.0)
+    Downloading: 100%         
+
+  - Installing doctrine/inflector (v1.0)
+    Downloading: 100%         
+
+  - Removing doctrine/common (2.3.0)
+  - Installing doctrine/common (2.4.0-RC4)
+    Downloading: 100%         
+
+  - Installing doctrine/migrations (v1.0-ALPHA1)
+    Downloading: 100%         
+
+  - Installing doctrine/doctrine-migrations-bundle (dev-master d950535)
+    Cloning d950535e30434dc2521e5e434c19d666f4917245
+
+Writing lock file
+Generating autoload files
+Updating the "app/config/parameters.yml" file.
+Clearing the cache for the dev environment with debug true
+Installing assets using the hard copy option
+Installing assets for Symfony\Bundle\FrameworkBundle into web/bundles/framework
+Installing assets for i\AppBundle into web/bundles/iapp
+Installing assets for Acme\DemoBundle into web/bundles/acmedemo
+Installing assets for Sensio\Bundle\DistributionBundle into web/bundles/sensiodistribution
+

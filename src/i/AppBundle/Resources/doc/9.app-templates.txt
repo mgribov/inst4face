@@ -1,0 +1,62 @@
+1. Create template base file so all other templates can inherit it and share common HTML content
+
+src/i/AppBundle/Resources/views/Default/base.html.twig:
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=9" />
+        <meta name="description" content="{% block description %}inst4face is epic{% endblock %}">
+        
+        <title>{% block title %}inst4face{% endblock %}</title> 
+                    
+        {% block stylesheets %}
+            <link href="{{ asset('/bootstrap/css/bootstrap.min.css') }}" type="text/css" rel="stylesheet" />
+            <link href="{{ asset('/bootstrap/css/bootstrap-responsive.min.css') }}" type="text/css" rel="stylesheet" />
+        {% endblock %}
+           	        	        	       
+        <link rel="shortcut icon" href="/images/favicon.ico">												        
+    </head> 
+    <body>    	    
+        {% block body %}{% endblock %}
+	        
+        {% block javascripts %}
+            <script src="http://code.jquery.com/jquery.js"></script>
+            
+            {% javascripts 
+            '%kernel.root_dir%/../web/bootstrap/js/bootstrap.min.js'
+            filter="?yui_js" output="compiled/main.js" %}
+            
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+			
+        {% endblock %}    
+    </body>    
+</html>
+
+src/i/AppBundle/Resources/views/Default/index.html.twig:
+{% extends 'iAppBundle:Default:base.html.twig' %}
+{% block title %}inst4face home{% endblock %}
+{% block body %}
+{% endblock %}
+
+2. Add bootstrap, configure and run assetic
+app/config:
+ assetic:
+     debug:          %kernel.debug%
+     use_controller: false
+-    bundles:        [ ]
++    bundles:        [ iAppBundle ]
++    read_from: %kernel.root_dir%/../web/
++    write_to: %kernel.root_dir%/../web/    
+     filters:
+         cssrewrite: ~
++        yui_js:
++            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
++        yui_css:
++            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
+ 
+mkdir -p web/compiled && ./app/console assetic:dump
+
+3. Populate the templates with the app: flavorfrenzy.files.wordpress.com/2013/02/killerrainbowunicorn.jpeg

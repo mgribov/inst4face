@@ -1,0 +1,74 @@
+1. Add a call to a function to get all the pics from the Controller:
+src/i/AppBundle/Controller/DefaultController.php:
+     public function indexAction($page = 1) {
+-        return $this->render('iAppBundle:Default:index.html.twig');
++        $out = array(
++            'images' => $this->getDoctrine()
++                ->getManager()
++                ->getRepository('iAppBundle:Pic')
++                ->getAll($page),
++        );
++        
++        return $this->render('iAppBundle:Default:index.html.twig', $out);
+     }
+
+2. Add a custom Repository file where we can keep custom SQL/DQL functions
+src/i/AppBundle/Entity/Pic.php:
+- * @ORM\Entity
++ * @ORM\Entity(repositoryClass="i\AppBundle\Repository\PicRepository")
+
+src/i/AppBundle/Repository/PicRepository.php:
+<?php
+
+namespace i\AppBundle\Repository;
+
+use Doctrine\ORM\EntityRepository;
+
+/**
+ * PicRepository
+ */
+class PicRepository extends EntityRepository {
+    
+    public function getAll($offset = 1, $num = 10) {
+        $q = "select p, l.name 
+                from iAppBundle:Pic p
+                inner join p.login l
+                order by p.createdAt desc";
+
+        return $this->getEntityManager()
+                ->createQuery($q)
+                ->setFirstResult((abs($offset) - 1) * $num)
+                ->setMaxResults($num)
+                ->useResultCache(true, 600)
+                ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+    }
+    
+}
+
+3. Add the foreign key for login_id on Pic to create the relationship from above
+src/i/AppBundle/Entity/Pic.php:
+-    /**
+-     * @var integer
+-     *
+-     * @ORM\Column(name="login_id", type="integer", nullable=false)
+-     */
+-    private $loginId;
++    /**
++     * @var Login
++     *
++     * @ORM\ManyToOne(targetEntity="Login", inversedBy="allPics")
++     * @ORM\JoinColumns({
++     *   @ORM\JoinColumn(name="login_id", referencedColumnName="id")
++     * })
++     */
++    private $login;
+
+src/i/AppBundle/Entity/Login.php:
++    /**
++     * @var Pic
++     * 
++     * @ORM\OneToMany(targetEntity="Pic", mappedBy="login")
++     */
++    private $allPics;
+
+4. Create and execute the migration with the actual SQL "ALTER TABLE ... FOREIGN KEY ..."
