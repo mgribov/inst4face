@@ -36,4 +36,8 @@ i\AppBundle\Entity\Login:
             type: bigint
             nullable: true
             column: facebook_id
+        createdAt:
+            type: datetime
+            nullable: false
+            column: created_at
     lifecycleCallbacks: {  }

@@ -65,6 +65,13 @@ class Login implements UserInterface
      */
     private $facebookId;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     */
+    private $createdAt;
+
 
     public function __construct() {
         $this->pics = 0;
@@ -241,5 +248,28 @@ class Login implements UserInterface
     public function getFacebookId()
     {
         return $this->facebookId;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Login
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }
