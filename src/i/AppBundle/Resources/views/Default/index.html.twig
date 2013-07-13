@@ -16,7 +16,7 @@
             <div class="span3">
                 <h2>{{i.name}}</h2>
                 <p><img src="{{i.url}}"></p>
-                <p><a class="btn" href="{{path('like', {'id' : i.id})}}">Like &raquo;</a></p>
+                <p><a class="btn" href="{{path('like', {'id' : i.id})}}">Like &raquo;</a>({{i.likes}} likes)</p>
             </div>
                 
             {% if j == 4 %} 

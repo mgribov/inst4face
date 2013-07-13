@@ -3,5 +3,18 @@
 {% block title %}inst4face upload{% endblock %}
 
 {% block body %}
+<div>
+    <div>
+        {% for i in app.session.getFlashBag.get('message')%}
+            {{i}}
+        {% endfor %}
+    </div>
 
+    <div>
+        <form method="post" action="{{path('upload')}}">
+            Name: <input type="text" name="name"><br/>
+            URL: <input type="text" name="url"><br/>
+        </form>
+    </div>
+        </div>
 {% endblock %}

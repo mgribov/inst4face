@@ -35,6 +35,28 @@ class DefaultController extends Controller {
      * @Secure(roles="ROLE_USER")
      */    
     public function uploadAction() {
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'GET' && strlen($request->get('name') && strlen($request->get('url')))) {
+            $em = $this->getDoctrine()->getManager();            
+            
+            $pic = new \i\AppBundle\Entity\Pic;
+            $pic->setLogin($this->get('security.context')->getToken()->getUser());
+            $pic->setName($request->get('name'));
+            $pic->setUrl($request->get('url'));
+            
+            $em->persist($pic);
+            $em->flush();
+            
+            $this->get('session')->getFlashBag()->add('message', 'Pic uploaded!');
+            
+            $e = $this->get('event.facebook.image');
+            $e->setEntity($pic);
+            $this->get('event_dispatcher')->dispatch('notification.facebook.post', $e);
+            
+            return $this->redirect($this->generateUrl('upload'));
+        }        
+        
         return $this->render('iAppBundle:Default:upload.html.twig');
     }
 

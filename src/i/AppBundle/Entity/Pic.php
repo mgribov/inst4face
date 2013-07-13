@@ -60,6 +60,10 @@ class Pic
      */
     private $login;
 
+    public function __construct() {
+        $this->likes = 0;
+        $this->createdAt = new \DateTime;
+    }
 
     /**
      * Get id
@@ -77,7 +81,7 @@ class Pic
      * @param i\AppBundle\Entity\Login $login
      * @return Pic
      */
-    public function setLogin(i\AppBundle\Entity\Login $login)
+    public function setLogin(\i\AppBundle\Entity\Login $login)
     {
         $this->login = $login;
     

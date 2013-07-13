@@ -1,8 +1,75 @@
 1. Create form and action to add a pic URL and record it in the database
+    /** 
+     * @Route("/upload", name="upload")
+     * @Secure(roles="ROLE_USER")
+     */    
+    public function uploadAction() {
+        $request = $this->getRequest();
+        
+        if ($request->getMethod() == 'GET' && strlen($request->get('name') && $request->get('url'))) {
+            $em = $this->getDoctrine()->getManager();            
+            
+            $pic = new \i\AppBundle\Entity\Pic;
+            $pic->setLogin($this->get('security.context')->getToken()->getUser());
+            $pic->setName($request->get('name'));
+            $pic->setUrl($request->get('url'));
+            
+            $em->persist($pic);
+            $em->flush();
+            
+            $this->get('session')->getFlashBag()->add('message', 'Pic uploaded!');
+            
+            $e = $this->get('event.facebook.image');
+            $e->setEntity($pic);
+            $this->get('event_dispatcher')->dispatch('notification.facebook.post', $e);
+            
+            return $this->redirect($this->generateUrl('upload'));
+        }        
+        
+        return $this->render('iAppBundle:Default:upload.html.twig');
+    }
+
 
 2. Post activity to Facebook
-    - add simple Gearman service
-    - add simple Facebook service
-    - add Facebook Post Event
-    - add Facebook Post Event Listener
+- add simple Gearman service
+- add simple Facebook service
+- add Facebook Post Event
+- add Facebook Post Event Listener
+src/i/AppBundle/Resources/config/services.yml:
+parameters:
+    facebook:
+        appId:  '12345'
+        secret: 'abcde'
+        scope:  'email,user_birthday,publish_actions'
+
+    gearman:
+        host:   '127.0.0.1'
+        port:   '4730'
+
+services:
+    facebook:
+        class:        i\AppBundle\Services\iFacebook
+        arguments:    [ %facebook% ]
+
+    gearman:
+        class:        i\AppBundle\Services\iGearman
+        arguments:    [ %gearman% ]
+
+    listener.facebook:
+        class: i\AppBundle\Listener\FacebookListener
+        tags:
+            - { name: kernel.event_listener, event: notification.facebook.post, method: onEvent }
+  
+    event.facebook.image:
+        class: i\AppBundle\Event\Facebook\ImageEvent
+        calls:
+            - [setFacebook, [@facebook] ]
+            - [setGearman, [@gearman] ]
+
+
     - dispatch the event from Controller on successful pic add
+            $e = $this->get('event.facebook.image');
+            $e->setEntity($pic);
+            $this->get('event_dispatcher')->dispatch('notification.facebook.post', $e);
+
+    - create a Facebook message based on the event and pass it to Gearman service

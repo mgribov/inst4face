@@ -1,7 +1,29 @@
 parameters:
-#    i_app.example.class: i\AppBundle\Example
+    facebook:
+        appId:  '12345'
+        secret: 'abcde'
+        scope:  'email,user_birthday,publish_actions'
+
+    gearman:
+        host:   '127.0.0.1'
+        port:   '4730'
 
 services:
-#    i_app.example:
-#        class: %i_app.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    facebook:
+        class:        i\AppBundle\Services\iFacebook
+        arguments:    [ %facebook% ]
+
+    gearman:
+        class:        i\AppBundle\Services\iGearman
+        arguments:    [ %gearman% ]
+
+    listener.facebook:
+        class: i\AppBundle\Listener\FacebookListener
+        tags:
+            - { name: kernel.event_listener, event: notification.facebook.post, method: onEvent }
+  
+    event.facebook.image:
+        class: i\AppBundle\Event\Facebook\ImageEvent
+        calls:
+            - [setFacebook, [@facebook] ]
+            - [setGearman, [@gearman] ]
